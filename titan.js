@@ -5,7 +5,6 @@ let moveForward = false,
   moveRight = false,
   moveUp = false,
   moveDown = false;
-let marineLife = [];
 let waterParticles;
 let exploring = false;
 let modelsLoaded = false;
@@ -78,9 +77,6 @@ function init() {
   loadModels();
   addWaterParticles();
   addCorals();
-  //   addSharks();
-  addWhales();
-  addFishSchools();
 
   window.addEventListener("resize", onWindowResize, false);
   document.addEventListener("keydown", onKeyDown, false);
@@ -107,11 +103,9 @@ function init() {
     .addEventListener("click", returnToMap);
 }
 
-// ... (previous functions remain the same)
-
 function loadModels() {
   let loadedCount = 0;
-  const totalModels = 6;
+  const totalModels = 3; // Submarine, ship, and Titanic wreck
 
   function onModelLoad() {
     loadedCount++;
@@ -175,23 +169,6 @@ function loadModels() {
     },
     "Titanic wreck"
   );
-
-  loadModel(
-    "https://my-threejs-3d-models.s3.amazonaws.com/models/coral/scene.gltf",
-    onModelLoad,
-    "Coral"
-  );
-  //   loadModel("models/shark/scene.gltf", onModelLoad, "Shark");
-  loadModel(
-    "https://my-threejs-3d-models.s3.amazonaws.com/models/whale/scene.gltf",
-    onModelLoad,
-    "Whale"
-  );
-  loadModel(
-    "https://my-threejs-3d-models.s3.amazonaws.com/models/carp_fish/scene.gltf",
-    onModelLoad,
-    "Fish"
-  );
 }
 
 function addCorals() {
@@ -212,99 +189,6 @@ function addCorals() {
           Math.random() * 2 + 1
         );
         scene.add(coral);
-      }
-    }
-  );
-}
-
-// function addSharks() {
-//     loader.load('models/shark/scene.gltf', (gltf) => {
-//         const sharkModel = gltf.scene;
-//         for (let i = 0; i < 600; i++) {
-//             const shark = sharkModel.clone();
-//             shark.scale.set(0.5, 0.5, 0.5);
-//             shark.position.set(
-//                 Math.random() * 8000 - 4000,
-//                 Math.random() * (MIN_DEPTH - MAX_DEPTH) + MAX_DEPTH,
-//                 Math.random() * 8000 - 4000
-//             );
-//             scene.add(shark);
-//             marineLife.push({
-//                 model: shark,
-//                 speed: 1,
-//                 rotationSpeed: Math.random() * 0.02 - 0.01,
-//                 yRange: [MAX_DEPTH, MIN_DEPTH]
-//             });
-
-//             // Add point light to shark
-//             const light = new THREE.PointLight(0xffffff, 0.5, 50);
-//             shark.add(light);
-//         }
-//     });
-// }
-
-function addWhales() {
-  loader.load(
-    "https://my-threejs-3d-models.s3.amazonaws.com/models/whale/scene.gltf",
-    (gltf) => {
-      const whaleModel = gltf.scene;
-      for (let i = 0; i < 50; i++) {
-        const whale = whaleModel.clone();
-        whale.scale.set(5, 5, 5);
-        whale.position.set(
-          Math.random() * 8000 - 4000,
-          Math.random() * (MIN_DEPTH - MAX_DEPTH) + MAX_DEPTH,
-          Math.random() * 8000 - 4000
-        );
-        scene.add(whale);
-        marineLife.push({
-          model: whale,
-          speed: 0.8,
-          rotationSpeed: Math.random() * 0.01 - 0.005,
-          yRange: [MAX_DEPTH, MIN_DEPTH],
-        });
-
-        // Add point light to whale
-        const light = new THREE.PointLight(0xffffff, 0.5, 100);
-        whale.add(light);
-      }
-    }
-  );
-}
-
-function addFishSchools() {
-  loader.load(
-    "https://my-threejs-3d-models.s3.amazonaws.com/models/carp_fish/scene.gltf",
-    (gltf) => {
-      const fishModel = gltf.scene;
-      for (let i = 0; i < 500; i++) {
-        const school = new THREE.Group();
-        for (let j = 0; j < 100; j++) {
-          const fish = fishModel.clone();
-          fish.scale.set(1, 1, 1);
-          fish.position.set(
-            Math.random() * 100 - 50,
-            Math.random() * 100 - 50,
-            Math.random() * 100 - 50
-          );
-          school.add(fish);
-        }
-        school.position.set(
-          Math.random() * 8000 - 4000,
-          Math.random() * (MIN_DEPTH - MAX_DEPTH) + MAX_DEPTH,
-          Math.random() * 8000 - 4000
-        );
-        scene.add(school);
-        marineLife.push({
-          model: school,
-          speed: 2,
-          rotationSpeed: Math.random() * 0.02 - 0.01,
-          yRange: [MAX_DEPTH, MIN_DEPTH],
-        });
-
-        // Add point light to school
-        const light = new THREE.PointLight(0xffffff, 0.5, 100);
-        school.add(light);
       }
     }
   );
@@ -367,23 +251,23 @@ function onWindowResize() {
 }
 
 function onKeyDown(event) {
-  switch (event.keyCode) {
-    case 38: // Arrow Up
+  switch (event.code) {
+    case "ArrowUp":
       moveForward = true;
       break;
-    case 40: // Arrow Down
+    case "ArrowDown":
       moveBackward = true;
       break;
-    case 37: // Arrow Left
+    case "ArrowLeft":
       moveLeft = true;
       break;
-    case 39: // Arrow Right
+    case "ArrowRight":
       moveRight = true;
       break;
-    case 32: // Space
+    case "Space":
       moveDown = true;
       break;
-    case 9: // Tab
+    case "Tab":
       moveUp = true;
       event.preventDefault();
       break;
@@ -391,23 +275,23 @@ function onKeyDown(event) {
 }
 
 function onKeyUp(event) {
-  switch (event.keyCode) {
-    case 38: // Arrow Up
+  switch (event.code) {
+    case "ArrowUp":
       moveForward = false;
       break;
-    case 40: // Arrow Down
+    case "ArrowDown":
       moveBackward = false;
       break;
-    case 37: // Arrow Left
+    case "ArrowLeft":
       moveLeft = false;
       break;
-    case 39: // Arrow Right
+    case "ArrowRight":
       moveRight = false;
       break;
-    case 32: // Space
+    case "Space":
       moveDown = false;
       break;
-    case 9: // Tab
+    case "Tab":
       moveUp = false;
       break;
   }
@@ -417,7 +301,7 @@ function onScroll(event) {
   if (!exploring) return;
 
   const scrollSpeed = 0.5;
-  submarine.position.y -= event.deltaY * scrollSpeed; // Reversed scrolling
+  submarine.position.y -= event.deltaY * scrollSpeed;
 
   // Clamp depth
   submarine.position.y = Math.max(
@@ -425,9 +309,19 @@ function onScroll(event) {
     MAX_DEPTH
   );
 
+  // Update camera position
+  updateCameraPosition();
+
   // Update depth display
   const depthElement = document.getElementById("depth");
   depthElement.innerText = (-submarine.position.y).toFixed(2);
+}
+
+function updateCameraPosition() {
+  const offset = new THREE.Vector3(0, 10, 30);
+  offset.applyQuaternion(submarine.quaternion);
+  camera.position.copy(submarine.position).add(offset);
+  camera.lookAt(submarine.position);
 }
 
 let isDragging = false;
@@ -450,7 +344,7 @@ function onMouseMove(event) {
     y: event.clientY - previousMousePosition.y,
   };
 
-  const rotationSpeed = 0.03;
+  const rotationSpeed = 0.003;
   submarine.rotation.y -= deltaMove.x * rotationSpeed;
   submarine.rotation.x -= deltaMove.y * rotationSpeed;
 
@@ -460,6 +354,7 @@ function onMouseMove(event) {
   );
 
   previousMousePosition = { x: event.clientX, y: event.clientY };
+  updateCameraPosition();
 }
 
 function startExploration() {
@@ -468,16 +363,11 @@ function startExploration() {
     return;
   }
   exploring = true;
-  flashCardShown = false; // Reset this variable when starting exploration
+  flashCardShown = false;
   submarine.visible = true;
   if (ship) ship.visible = false;
   submarine.position.set(0, -10, 0);
-  camera.position.set(
-    submarine.position.x,
-    submarine.position.y + 10,
-    submarine.position.z + 30
-  );
-  camera.lookAt(submarine.position);
+  updateCameraPosition();
 
   scene.fog = new THREE.FogExp2(0x000033, 0.00075);
   document.getElementById("lets-go-button").style.display = "none";
@@ -502,38 +392,35 @@ function updateEnvironment() {
     (child) => child instanceof THREE.AmbientLight
   ).intensity = ambientIntensity;
 
-  // Show Read Info button when depth is greater than READ_INFO_DEPTH
   if (depth > READ_INFO_DEPTH) {
     document.getElementById("read-info-button").style.display = "block";
   } else {
     document.getElementById("read-info-button").style.display = "none";
   }
 
-  // Automatically show flash card when depth is greater than FLASH_CARD_DEPTH
   if (depth > FLASH_CARD_DEPTH && !flashCardShown) {
     showTitanicInfo();
     flashCardShown = true;
   }
 
-  // Update depth display
   document.getElementById("depth").innerText = depth.toFixed(2);
 }
 
 function showTitanicInfo() {
   const flashCard = document.getElementById("flash-card");
   flashCard.innerHTML = `
-                <button class="close-button" onclick="closeFlashCard()">×</button>
-                <h2>The Titanic</h2>
-                <p>The RMS Titanic was a British passenger liner that sank in the North Atlantic Ocean on April 15, 1912, after striking an iceberg during her maiden voyage from Southampton, UK, to New York City.</p>
-                <p>Key facts:</p>
-                <ul>
-                    <li>Over 1,500 people died, making it one of the deadliest maritime disasters in modern history.</li><br>
-                    <li>The ship was the largest afloat at the time and was considered "unsinkable".</li><br>
-                    <li>The wreck was discovered in 1985 at a depth of about 12,500 feet (3,800 m).</li><br>
-                    <li>The Titanic's story has fascinated the public for over a century, inspiring numerous books, films, and exhibitions.</li>
-                </ul>
-                <p> <br>  LET US EXPLORE IT !</p>
-            `;
+    <button class="close-button" onclick="closeFlashCard()">×</button>
+    <h2>The Titanic</h2>
+    <p>The RMS Titanic was a British passenger liner that sank in the North Atlantic Ocean on April 15, 1912, after striking an iceberg during her maiden voyage from Southampton, UK, to New York City.</p>
+    <p>Key facts:</p>
+    <ul>
+        <li>Over 1,500 people died, making it one of the deadliest maritime disasters in modern history.</li><br>
+        <li>The ship was the largest afloat at the time and was considered "unsinkable".</li><br>
+        <li>The wreck was discovered in 1985 at a depth of about 12,500 feet (3,800 m).</li><br>
+        <li>The Titanic's story has fascinated the public for over a century, inspiring numerous books, films, and exhibitions.</li>
+    </ul>
+    <p> <br>  LET US EXPLORE IT !</p>
+  `;
   flashCard.style.display = "block";
 }
 
@@ -543,7 +430,7 @@ function closeFlashCard() {
 
 function updateOxygen() {
   if (exploring && submarine.position.y < MIN_DEPTH) {
-    oxygen -= 0.05; // Adjusted depletion rate
+    oxygen -= 0.05;
     if (oxygen <= 0) {
       oxygen = 0;
       exploring = false;
@@ -568,8 +455,8 @@ function startImplosion() {
 function updateImplosion() {
   if (!isImploding) return;
 
-  const elapsedTime = (Date.now() - implosionStartTime) / 1000; // time in seconds
-  const implosionDuration = 2; // total duration of implosion in seconds
+  const elapsedTime = (Date.now() - implosionStartTime) / 1000;
+  const implosionDuration = 2;
 
   if (elapsedTime < implosionDuration) {
     const t = elapsedTime / implosionDuration;
@@ -616,45 +503,27 @@ function updateImplosion() {
 function showOceanGateInfo() {
   const flashCard = document.getElementById("flash-card");
   flashCard.innerHTML = `
-                <button class="close-button" onclick="closeFlashCard()">×</button>
-                <h2>OceanGate Titan Submersible Incident</h2>
-                <p>On June 18, 2023, the Titan, a submersible operated by OceanGate, imploded during a dive to the Titanic wreck site.</p>
-                <p>Key facts:</p>
-                <ul>
-                    <li>The submersible was carrying five people, including OceanGate's CEO.</li>
-                    <li>The implosion occurred at a depth of approximately 12,500 feet (3,800 meters).</li>
-                    <li>The incident highlighted concerns about the safety of deep-sea exploration vehicles.</li>
-                    <li>The implosion was likely due to the immense pressure at that depth, estimated at over 5,600 pounds per square inch.</li>
-                </ul>
-                <p>This tragic event serves as a stark reminder of the extreme challenges and risks involved in deep-sea exploration.</p>
-            `;
+    <button class="close-button" onclick="closeFlashCard()">×</button>
+    <h2>OceanGate Titan Submersible Incident</h2>
+    <p>On June 18, 2023, the Titan, a submersible operated by OceanGate, imploded during a dive to the Titanic wreck site.</p>
+    <p>Key facts:</p>
+    <ul>
+        <li>The submersible was carrying five people, including OceanGate's CEO.</li>
+        <li>The implosion occurred at a depth of approximately 12,500 feet (3,800 meters).</li>
+        <li>The incident highlighted concerns about the safety of deep-sea exploration vehicles.</li>
+        <li>The implosion was likely due to the immense pressure at that depth, estimated at over 5,600 pounds per square inch.</li>
+    </ul>
+    <p>This tragic event serves as a stark reminder of the extreme challenges and risks involved in deep-sea exploration.</p>
+  `;
   flashCard.style.display = "block";
 }
 
-function closeFlashCard() {
-  document.getElementById("flash-card").style.display = "none";
-  if (!exploring) {
-    document.getElementById("dive-again-button").style.display = "block";
-  }
+function returnToMap() {
+  const currentLocation = { name: "Titanic Sinking Spot" };
+  window.location.href = `threeD.html?returnedFrom=${encodeURIComponent(
+    currentLocation.name
+  )}`;
 }
-
-document.getElementById("dive-again-button").addEventListener("click", () => {
-  // Reset submarine position, rotation, and visibility
-  submarine.position.set(0, -10, 0); // Reset to the initial position
-  submarine.rotation.set(0, 0, 0); // Reset rotation if necessary
-  submarine.visible = true; // Ensure it's visible
-
-  // Reset any other necessary variables or states
-  exploring = true;
-  isImploding = false;
-  oxygen = 100;
-
-  // Hide "Dive Again" button and any game-over text
-  document.getElementById("dive-again-button").style.display = "none";
-  document.getElementById("game-over").style.display = "none";
-
-  // Any other reset logic
-});
 
 function animate() {
   requestAnimationFrame(animate);
@@ -688,63 +557,24 @@ function animate() {
         MAX_DEPTH
       );
 
-      camera.position
-        .copy(submarine.position)
-        .add(
-          new THREE.Vector3(0, 10, 30).applyQuaternion(submarine.quaternion)
-        );
-      camera.lookAt(submarine.position);
-
+      updateCameraPosition();
       waterParticles.position.y = submarine.position.y;
 
-      // Animate marine life
-      marineLife.forEach((animal) => {
-        const direction = new THREE.Vector3(
-          Math.sin(Date.now() * 0.001 * animal.rotationSpeed),
-          0,
-          Math.cos(Date.now() * 0.001 * animal.rotationSpeed)
-        );
-        animal.model.position.add(direction.multiplyScalar(animal.speed));
-
-        // Wrap around behavior
-        animal.model.position.x =
-          ((animal.model.position.x + 4000) % 8000) - 4000;
-        animal.model.position.z =
-          ((animal.model.position.z + 4000) % 8000) - 4000;
-
-        // Keep within vertical range and inside the ocean
-        animal.model.position.y = Math.max(
-          Math.min(animal.model.position.y, animal.yRange[1]),
-          Math.max(animal.yRange[0], MIN_DEPTH)
-        );
-
-        animal.model.rotation.y = Math.atan2(direction.x, direction.z);
-
-        // Show marine life that's close to the submarine
-        const distance = animal.model.position.distanceTo(submarine.position);
-        animal.model.visible = distance < 1000; // Increased visibility range
-      });
-
-      const depthElement = document.getElementById("depth");
-      depthElement.innerText = (-submarine.position.y).toFixed(2);
-
       updateEnvironment();
-      updateOxygen(); // Make sure this is called in each frame
-    } else {
-      ship.position.y = 5 + Math.sin(Date.now() * 0.001) * 0.5;
+      updateOxygen();
+    } else if (!exploring) {
+      ship.position.y = -1.5 + Math.sin(Date.now() * 0.001) * 0.5;
       camera.lookAt(ship.position);
+    }
+
+    if (isImploding) {
+      updateImplosion();
     }
   }
 
   renderer.render(scene, camera);
 }
 
-function returnToMap() {
-  const currentLocation = { name: "Titanic Sinking Spot" }; // You may need to adjust this based on your actual location tracking
-  window.location.href = `index.html?returnedFrom=${encodeURIComponent(
-    currentLocation.name
-  )}`;
-}
 // Initialize the scene
 init();
 // Start the animation loop
