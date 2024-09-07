@@ -266,7 +266,6 @@ function onKeyDown(event) {
       break;
     case "Space":
       moveDown = true;
-      event.preventDefault();
       break;
     case "Tab":
       moveUp = true;
@@ -298,10 +297,6 @@ function onKeyUp(event) {
   }
 }
 
-// Initialize the scene
-init();
-// Start the animation loop
-animate();
 function onScroll(event) {
   if (!exploring) return;
 
@@ -525,7 +520,7 @@ function showOceanGateInfo() {
 
 function returnToMap() {
   const currentLocation = { name: "Titanic Sinking Spot" };
-  window.location.href = `threeD.html?returnedFrom=${encodeURIComponent(
+  window.location.href = `index.html?returnedFrom=${encodeURIComponent(
     currentLocation.name
   )}`;
 }
